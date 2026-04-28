@@ -123,6 +123,26 @@ adapters/
 
 ---
 
+## Privacy Model
+
+MVPL does not store raw personal data.
+
+Example transformation:
+
+Taro → SHA-256 hash
+Yamada → SHA-256 hash
+
+Tokyo 2-8-1 Nakacho
+→ 281
+
+ID: AB12345678
+→ upper4: 1234
+→ lower4: 5678
+
+Raw data is discarded after transformation.
+
+---
+
 ## What this is NOT
 
 - Not an AI agent

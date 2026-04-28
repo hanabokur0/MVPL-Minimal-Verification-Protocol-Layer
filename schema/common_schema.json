@@ -1,0 +1,85 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "mvpl/common_schema/v1",
+  "title": "MVPL Common Verification Schema",
+  "description": "Minimum field set for structured verification. Personal data never reaches the engine.",
+  "type": "object",
+
+  "properties": {
+
+    "first_name_hash": {
+      "type": "string",
+      "description": "SHA-256 hash of normalized first name. Raw name is never transmitted.",
+      "pattern": "^[a-f0-9]{64}$|^$",
+      "example": "a3f1c2..."
+    },
+
+    "last_name_hash": {
+      "type": "string",
+      "description": "SHA-256 hash of normalized last name. Raw name is never transmitted.",
+      "pattern": "^[a-f0-9]{64}$|^$",
+      "example": "b7e4d1..."
+    },
+
+    "address_numeric": {
+      "type": "string",
+      "description": "Numeric portion of address only. e.g. '2-8-1' extracted from full address. Prefecture and city are never transmitted.",
+      "pattern": "^[0-9\\-]+$|^$",
+      "example": "2-8-1"
+    },
+
+    "id_upper4": {
+      "type": "string",
+      "description": "First 4 digits of personal identifier (my number, license number, etc). Full number is never reconstructable from this field alone.",
+      "pattern": "^[0-9]{4}$|^$",
+      "example": "1234"
+    },
+
+    "id_lower4": {
+      "type": "string",
+      "description": "Last 4 digits of personal identifier. Combined with id_upper4, full number remains unrecoverable.",
+      "pattern": "^[0-9]{4}$|^$",
+      "example": "5678"
+    },
+
+    "request_id": {
+      "type": "string",
+      "description": "Transaction or session anchor. Used for audit trail and protocol routing. Not personal data.",
+      "pattern": "^[a-zA-Z0-9\\-_]+$|^$",
+      "example": "REQ-20240429-001"
+    }
+
+  },
+
+  "required": [],
+
+  "additionalProperties": false,
+
+  "$defs": {
+
+    "netcafe": {
+      "description": "Net cafe / manga cafe profile. 4-field verification.",
+      "required": ["first_name_hash", "last_name_hash", "id_upper4", "id_lower4"]
+    },
+
+    "hotel": {
+      "description": "Hotel / capsule hotel / guest house profile. 6-field verification.",
+      "required": ["first_name_hash", "last_name_hash", "address_numeric", "id_upper4", "id_lower4", "request_id"]
+    },
+
+    "contract": {
+      "description": "Contract verification profile. Adapts to domain-specific fields.",
+      "required": ["first_name_hash", "last_name_hash", "request_id"]
+    }
+
+  },
+
+  "_meta": {
+    "version": "1.0.0",
+    "engine": "invariant",
+    "field_count": "configurable per domain",
+    "personal_data_in_engine": false,
+    "runtime_core": "https://github.com/hanabokur0/Protocol-Engine-LoPAS-Runtime-Core-"
+  }
+
+}

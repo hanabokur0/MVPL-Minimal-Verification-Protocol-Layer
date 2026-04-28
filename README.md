@@ -151,6 +151,58 @@ Optional:
 
 ---
 
+## Live Example
+
+Request:
+
+```json
+{
+  "a": {
+    "first_name_hash": "abc123",
+    "last_name_hash": "def456",
+    "address_numeric": "2-8-1",
+    "id_upper4": "4829",
+    "id_lower4": "1377",
+    "request_id": "REQ001"
+  },
+  "b": {
+    "first_name_hash": "abc123",
+    "last_name_hash": "def456",
+    "address_numeric": "2-9-1",
+    "id_upper4": "4829",
+    "id_lower4": "1377",
+    "request_id": "REQ001"
+  },
+  "critical_fields": ["request_id"]
+}
+```
+
+Response:
+
+```json
+{
+  "success": true,
+  "results": {
+    "address_numeric": false,
+    "id_lower4": true,
+    "first_name_hash": true,
+    "id_upper4": true,
+    "last_name_hash": true,
+    "request_id": true
+  },
+  "score": 5,
+  "total_fields": 6,
+  "critical_mismatch": false,
+  "verdict": "HUMAN_REVIEW"
+}
+```
+
+Only the address mismatched.
+
+MVPL routes the request to human review instead of rejecting it.
+
+---
+
 ## What this is NOT
 
 - Not an AI agent

@@ -125,21 +125,29 @@ adapters/
 
 ## Privacy Model
 
-MVPL does not store raw personal data.
+MVPL does not process raw personal information.
 
-Example transformation:
+Example:
 
-Taro → SHA-256 hash
-Yamada → SHA-256 hash
+Taro → SHA-256 hash  
+Yamada → SHA-256 hash  
 
-Tokyo 2-8-1 Nakacho
+Tokyo Nakacho 2-8-1  
 → 281
 
-ID: AB12345678
-→ upper4: 1234
+ID: AB12345678  
+→ upper4: 1234  
 → lower4: 5678
 
-Raw data is discarded after transformation.
+Raw personal data remains in your existing OCR/KYC/CRM systems.
+
+MVPL only receives transformed verification tokens.
+
+Optional:
+- Salt rotation
+- Key management
+- Token expiration
+- Audit logging
 
 ---
 

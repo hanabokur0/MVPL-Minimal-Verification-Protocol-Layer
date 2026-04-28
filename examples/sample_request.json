@@ -1,0 +1,97 @@
+{
+  "_comment": "MVPL sample requests. Use with POST /verify",
+
+  "examples": [
+
+    {
+      "_label": "Net cafe — returning customer (name + last 4 only)",
+      "_flow": "Customer says name at counter. Shows last 4 digits of ID.",
+      "request": {
+        "domain": "netcafe",
+        "source": {
+          "first_name": "太郎",
+          "last_name": "山田",
+          "id_lower4": "5678",
+          "session_id": "REQ-20240429-001"
+        },
+        "target": {
+          "first_name": "太郎",
+          "last_name": "山田",
+          "id_lower4": "5678",
+          "session_id": "REQ-20240429-001"
+        }
+      },
+      "expected_route": "AUTO"
+    },
+
+    {
+      "_label": "Net cafe — name mismatch",
+      "_flow": "Last 4 digits match but name does not. Possible card sharing.",
+      "request": {
+        "domain": "netcafe",
+        "source": {
+          "first_name": "太郎",
+          "last_name": "山田",
+          "id_lower4": "5678",
+          "session_id": "REQ-20240429-002"
+        },
+        "target": {
+          "first_name": "花子",
+          "last_name": "山田",
+          "id_lower4": "5678",
+          "session_id": "REQ-20240429-002"
+        }
+      },
+      "expected_route": "REVIEW"
+    },
+
+    {
+      "_label": "Net cafe — critical field mismatch",
+      "_flow": "ID digits do not match. Entry should be blocked.",
+      "request": {
+        "domain": "netcafe",
+        "source": {
+          "first_name": "太郎",
+          "last_name": "山田",
+          "id_lower4": "5678",
+          "session_id": "REQ-20240429-003"
+        },
+        "target": {
+          "first_name": "太郎",
+          "last_name": "山田",
+          "id_lower4": "9999",
+          "session_id": "REQ-20240429-003"
+        }
+      },
+      "expected_route": "ESCALATE"
+    },
+
+    {
+      "_label": "Net cafe — new customer (full ID)",
+      "_flow": "First visit. Full ID presented. All 6 fields available.",
+      "request": {
+        "domain": "netcafe",
+        "source": {
+          "first_name": "Taro",
+          "last_name": "Yamada",
+          "id_number": "123456789012",
+          "session_id": "REQ-20240429-004"
+        },
+        "target": {
+          "first_name": "Taro",
+          "last_name": "Yamada",
+          "id_number": "123456789012",
+          "session_id": "REQ-20240429-004"
+        }
+      },
+      "expected_route": "AUTO"
+    }
+
+  ],
+
+  "curl": {
+    "_comment": "Run against local wrangler dev server",
+    "command": "curl -X POST http://localhost:8787/verify -H 'Content-Type: application/json' -d @sample_request_single.json"
+  }
+
+}

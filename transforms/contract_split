@@ -1,0 +1,91 @@
+/**
+ * MVPL Transform Utility — Contract / ID Splitter
+ * -------------------------------------------------
+ * Splits identifier strings into upper4 and lower4.
+ * Full number is never reconstructable from either part alone.
+ *
+ * Supports:
+ *   My Number (マイナンバー):   12 digits
+ *   Driver's license:           12 digits
+ *   Passport:                   alphanumeric, extracts digits
+ *   Custom IDs:                 any numeric string
+ *
+ * Examples:
+ *   "123456789012"  → { upper4: "1234", lower4: "9012" }
+ *   "1234-5678-90"  → { upper4: "1234", lower4: "7890" }
+ *   "AB1234567"     → { upper4: "1234", lower4: "4567" }
+ */
+
+// ─────────────────────────────────────────
+// NORMALIZATION
+// ─────────────────────────────────────────
+
+/**
+ * Strip all non-numeric characters.
+ * "1234-5678-9012" → "123456789012"
+ */
+function digitsOnly(value) {
+  return String(value ?? "").replace(/\D/g, "");
+}
+
+// ─────────────────────────────────────────
+// MAIN EXPORT
+// ─────────────────────────────────────────
+
+/**
+ * splitId(id) → { upper4, lower4 }
+ *
+ * @param {string|number} id — raw identifier
+ * @returns {{ upper4: string, lower4: string }}
+ *
+ * @example
+ * splitId("123456789012")  // → { upper4: "1234", lower4: "9012" }
+ * splitId("1234-5678")     // → { upper4: "1234", lower4: "5678" }
+ * splitId("")              // → { upper4: "",     lower4: ""     }
+ */
+export function splitId(id) {
+  const digits = digitsOnly(id);
+
+  if (digits.length < 4) {
+    return { upper4: "", lower4: "" };
+  }
+
+  return {
+    upper4: digits.slice(0, 4),
+    lower4: digits.slice(-4),
+  };
+}
+
+/**
+ * splitPartial(lower4Only) → { upper4, lower4 }
+ *
+ * For returning customer flow:
+ * Customer states only last 4 digits at counter.
+ * upper4 is left empty — engine compares lower4 only.
+ *
+ * @param {string} lower4Only — last 4 digits entered by staff
+ * @returns {{ upper4: string, lower4: string }}
+ *
+ * @example
+ * splitPartial("5678")  // → { upper4: "", lower4: "5678" }
+ */
+export function splitPartial(lower4Only) {
+  const digits = digitsOnly(lower4Only).slice(-4);
+  return {
+    upper4: "",
+    lower4: digits.length === 4 ? digits : "",
+  };
+}
+
+/**
+ * splitContract(contractNumber) → { upper4, lower4 }
+ *
+ * For contract verification domains.
+ * Same logic as splitId — alias for semantic clarity.
+ *
+ * @example
+ * splitContract("CON-20240429-001")  // extracts digits → { upper4: "2024", lower4: "0001" }
+ */
+export function splitContract(contractNumber) {
+  return splitId(contractNumber);
+}

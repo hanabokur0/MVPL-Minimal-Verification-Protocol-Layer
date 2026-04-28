@@ -6,7 +6,7 @@
 
 ## What it does
 
-Verifies identity using a minimum field set.  
+Minimal verification infrastructure for identity, contract, and workflow routing. 
 The engine never sees personal information.
 
 ```
